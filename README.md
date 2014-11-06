@@ -1,4 +1,6 @@
-augmentedreality
+augmented reality Examples for android.
 ================
 
-Augmented Reality examples for Android.
+Examples to actually follow shortly.  
+
+These are example code for University of Wyoming, Cosc 4730 Mobile Programming course. All examples are for Android.
