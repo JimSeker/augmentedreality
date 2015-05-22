@@ -26,7 +26,8 @@ import android.widget.TextView;
  * https://github.com/JimSeker/sensors
  * https://github.com/JimSeker/gps
  * https://github.com/JimSeker/video  piccapture demos.  for the camera preview.
- * 
+ *
+ * Yes, some many things are deprecated in 22... camera, orientation... I know.
  * 
  */
 
@@ -134,7 +135,7 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 		//if we have location information, update the screen here. just lat and lot, others
 		//are shown if you may need them.
 		if (location != null) {
-			tv_alt.setText("Altitude: " + location.getAltitude());
+			tv_alt.setText("Altitude: " + (location.getAltitude() *3.2808399) + " ft");  //1 meter is 3.2808399 feet
 			tv_lat.setText("Latitude: " + location.getLatitude());
 			tv_long.setText("Longitude: " + location.getLongitude());
 		}	
