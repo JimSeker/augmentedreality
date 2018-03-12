@@ -1,7 +1,9 @@
 package edu.cs4730.basicardemo;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -11,6 +13,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -28,12 +31,15 @@ import android.widget.TextView;
  * https://github.com/JimSeker/video  piccapture demos.  for the camera preview.
  *
  * Yes, some many things are deprecated in 22... camera, orientation... I know.
- * The camera permissions are also not included.
+ *
+ * NOTE: the first time, the camera is blank after getting permissions.  I didn't peruse a fix.
  * 
  */
 
 
 public class MainActivity extends Activity implements SensorEventListener, LocationListener, SurfaceHolder.Callback {
+
+    static public String TAG = "MainActivity";
 
 
     TextView tv_alt, tv_lat, tv_long; //gps
@@ -41,6 +47,7 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
     TextView tv_x, tv_y, tv_z;  //ACCELEROMETER
 
     //sensor and gps
+    public static final int REQUEST_FINE_ACCESS = 0;
     private LocationManager myL;
     private SensorManager mgr;
     private Sensor accel, orient;
@@ -93,11 +100,8 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
 
     @Override
     protected void onResume() {
-        mgr.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
-        mgr.registerListener(this, orient, SensorManager.SENSOR_DELAY_NORMAL);
-        myL.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         super.onResume();
-        camera = Camera.open();
+        startDemo();
     }
 
     @Override
@@ -106,9 +110,29 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
         mgr.unregisterListener(this, orient);
         myL.removeUpdates(this);
         super.onPause();
-        camera.release();
+        if (camera != null)
+            camera.release();
         camera = null;
         inPreview = false;
+    }
+
+    public void startDemo() {
+        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
+            (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+            //I'm on not explaining why, just asking for permission.
+            Log.v(TAG, "asking for permissions");
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA},
+                MainActivity.REQUEST_FINE_ACCESS);
+
+        } else {
+            //gps
+            mgr.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
+            mgr.registerListener(this, orient, SensorManager.SENSOR_DELAY_NORMAL);
+            myL.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            //camera
+            camera = Camera.open();
+
+        }
     }
 
     //this are for the Sensor events of orientation and accelerometer
@@ -209,6 +233,33 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
     public void surfaceDestroyed(SurfaceHolder holder) {
         // TODO Auto-generated method stub
 
+    }
+
+
+    /**
+     * Callback received when a permissions request has been completed.
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        Log.v(TAG, "onRequest result called.");
+        switch (requestCode) {
+            case REQUEST_FINE_ACCESS:
+                //received result for GPS access
+                Log.v(TAG, "Received response for gps permission request.");
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    Log.v(TAG, permissions[0] + " permission has now been granted. Showing preview.");
+                    startDemo();  //call the method again, so the gps demo will start up.
+                } else {
+                    // permission denied,    Disable this feature or close the app.
+                    Log.v(TAG, "GPS permission was NOT granted.");
+                }
+
+                return;
+            default:
+                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
     }
 
 }
