@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 21
-    buildToolsVersion "27.0.3"
 
     defaultConfig {
         applicationId "com.paar.ch8"
@@ -19,5 +18,5 @@ android {
 }
 
 dependencies {
-    compile files('libs/AndAR.jar')
+    implementation files('libs/AndAR.jar')
 }
