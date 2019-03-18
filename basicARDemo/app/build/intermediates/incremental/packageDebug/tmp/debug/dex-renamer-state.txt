@@ -1,0 +1,4 @@
+#Mon Mar 18 13:42:24 MDT 2019
+base.0=C\:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\build\\intermediates\\dex\\debug\\mergeDexDebug\\out
+path.0=classes.dex
+renamed.0=classes.dex

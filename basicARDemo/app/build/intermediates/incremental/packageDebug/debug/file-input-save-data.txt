@@ -1,0 +1,7 @@
+#Internal package file, do not edit.
+#Mon Mar 12 11:16:51 MDT 2018
+0.baseType=DIRECTORY
+0.base=C\:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\build\\intermediates\\transforms\\dexMerger\\debug\\0
+0.path=classes.dex
+0.set=DEX
+count=1
