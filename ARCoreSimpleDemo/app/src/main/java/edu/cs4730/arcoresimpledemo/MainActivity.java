@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.google.ar.core.Anchor;
 import com.google.ar.core.ArCoreApk;
 import com.google.ar.core.Camera;
-import com.google.ar.core.Config;
 import com.google.ar.core.Frame;
 import com.google.ar.core.HitResult;
 import com.google.ar.core.Plane;
@@ -23,6 +22,7 @@ import com.google.ar.core.Point;
 import com.google.ar.core.Session;
 import com.google.ar.core.Trackable;
 import com.google.ar.core.TrackingState;
+import com.google.ar.core.exceptions.CameraNotAvailableException;
 import com.google.ar.core.exceptions.UnavailableApkTooOldException;
 import com.google.ar.core.exceptions.UnavailableArcoreNotInstalledException;
 import com.google.ar.core.exceptions.UnavailableSdkTooOldException;
@@ -151,19 +151,16 @@ public class MainActivity extends AppCompatActivity  implements GLSurfaceView.Re
                 Log.e(TAG, "Exception creating session", exception);
                 return;
             }
-
-            // Create default config and check if supported.
-            Config config = new Config(session);
-            if (!session.isSupported(config)) {
-                showSnackbarMessage("This device does not support AR", true);
-            }
-            session.configure(config);
         }
 
         showLoadingMessage();
 
         // Note that order matters - see the note in onPause(), the reverse applies here.
-        session.resume();
+        try {
+            session.resume();
+        } catch (CameraNotAvailableException e) {
+            e.printStackTrace();
+        }
         surfaceView.onResume();
         displayRotationHelper.onResume();
     }
