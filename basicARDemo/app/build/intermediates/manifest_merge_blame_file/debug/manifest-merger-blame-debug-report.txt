@@ -1,0 +1,60 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="edu.cs4730.basicardemo"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+8-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml
+9        android:targetSdkVersion="30" />
+9-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml
+10
+11    <uses-feature android:name="android.hardware.camera" />
+11-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:5:5-60
+11-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:5:19-57
+12
+13    <uses-permission android:name="android.permission.CAMERA" />
+13-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:6:5-65
+13-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:6:22-62
+14    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+14-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:7:5-79
+14-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:7:22-76
+15
+16    <application
+16-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:9:5-24:19
+17        android:allowBackup="true"
+17-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:10:9-35
+18        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+18-->[androidx.core:core:1.3.0] C:\Users\seker\.gradle\caches\transforms-2\files-2.1\513efa8b232871d058fdda7e90972b20\core-1.3.0\AndroidManifest.xml:24:18-86
+19        android:debuggable="true"
+20        android:extractNativeLibs="false"
+21        android:icon="@drawable/ic_launcher"
+21-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:11:9-45
+22        android:label="@string/app_name"
+22-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:12:9-41
+23        android:testOnly="true"
+24        android:theme="@style/AppTheme" >
+24-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:13:9-40
+25        <activity
+25-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:14:9-23:20
+26            android:name="edu.cs4730.basicardemo.MainActivity"
+26-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:15:13-41
+27            android:label="@string/app_name"
+27-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:17:13-45
+28            android:screenOrientation="landscape" >
+28-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:16:21-60
+29            <intent-filter>
+29-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:18:13-22:29
+30                <action android:name="android.intent.action.MAIN" />
+30-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:19:17-69
+30-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:19:25-66
+31
+32                <category android:name="android.intent.category.LAUNCHER" />
+32-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:21:17-77
+32-->C:\Users\seker\git\augmentedreality\basicARDemo\app\src\main\AndroidManifest.xml:21:27-74
+33            </intent-filter>
+34        </activity>
+35    </application>
+36
+37</manifest>

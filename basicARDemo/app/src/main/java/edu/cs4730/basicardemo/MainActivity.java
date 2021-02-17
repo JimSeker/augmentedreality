@@ -1,7 +1,6 @@
 package edu.cs4730.basicardemo;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.hardware.Camera;
@@ -9,35 +8,42 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.hardware.camera2.CameraAccessException;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
+
+import androidx.core.app.ActivityCompat;
+
+import androidx.appcompat.app.AppCompatActivity;
+
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-/*
- * A very simple/basic AR example. 
- * 
+/**
+ * A very simple/basic AR example.
+ * <p>
  * It turns on the camera preview and displays the sensor for Orientation, accelerometer and gps location over the camera preview.
- * 
- * This code is based on code from 
+ * <p>
+ * This code is based on code from
  * https://github.com/JimSeker/sensors
  * https://github.com/JimSeker/gps
- * https://github.com/JimSeker/video  piccapture demos.  for the camera preview.
- *
- * Yes, some many things are deprecated in 22... camera, orientation... I know.
- *
+ * https://github.com/JimSeker/video  CameraPreview demos.  for the camera preview.
+ * <p>
+ * Yes, some many things are deprecated in 22... orientation... I know.
+ * <p>
  * NOTE: the first time, the camera is blank after getting permissions.  I didn't peruse a fix.
- * 
  */
 
 
-public class MainActivity extends Activity implements SensorEventListener, LocationListener, SurfaceHolder.Callback {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
 
     static public String TAG = "MainActivity";
 
@@ -53,9 +59,9 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
     private Sensor accel, orient;
 
     //camera and preview
-    SurfaceView cameraPreview;
-    SurfaceHolder previewHolder;
-    Camera camera;
+    Camera2Preview mPreview;
+    FrameLayout preview;
+
     boolean inPreview;
 
     @Override
@@ -65,36 +71,30 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
         setContentView(R.layout.activity_main);
 
         //display setup stuff
-        tv_alt = (TextView) findViewById(R.id.altitudeValue);
-        tv_lat = (TextView) findViewById(R.id.latitudeValue);
-        tv_long = (TextView) findViewById(R.id.longitudeValue);
+        tv_alt = findViewById(R.id.altitudeValue);
+        tv_lat = findViewById(R.id.latitudeValue);
+        tv_long = findViewById(R.id.longitudeValue);
 
-        tv_head = (TextView) findViewById(R.id.headingValue);
-        tv_pitch = (TextView) findViewById(R.id.pitchValue);
-        tv_roll = (TextView) findViewById(R.id.rollValue);
+        tv_head = findViewById(R.id.headingValue);
+        tv_pitch = findViewById(R.id.pitchValue);
+        tv_roll = findViewById(R.id.rollValue);
 
-        tv_x = (TextView) findViewById(R.id.xAxisValue);
-        tv_y = (TextView) findViewById(R.id.yAxisValue);
-        tv_z = (TextView) findViewById(R.id.zAxisValue);
+        tv_x = findViewById(R.id.xAxisValue);
+        tv_y = findViewById(R.id.yAxisValue);
+        tv_z = findViewById(R.id.zAxisValue);
 
         //we need the sensor manager and the gps manager, the
         //registration is all in onpause and onresume;
         mgr = (SensorManager) this.getSystemService(SENSOR_SERVICE);
         //orientation
         orient = mgr.getDefaultSensor(Sensor.TYPE_ORIENTATION);
-        //acceleraometer
+        //accelerometer
         accel = mgr.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         //gps location information
         myL = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //setup the location listener.
 
-
-        //all the camera preivew information
-        inPreview = false;
-        cameraPreview = (SurfaceView) findViewById(R.id.cameraPreview);
-        previewHolder = cameraPreview.getHolder();
-        previewHolder.addCallback(this);
-        previewHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        preview = findViewById(R.id.cameraPreview);
 
     }
 
@@ -110,9 +110,6 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
         mgr.unregisterListener(this, orient);
         myL.removeUpdates(this);
         super.onPause();
-        if (camera != null)
-            camera.release();
-        camera = null;
         inPreview = false;
     }
 
@@ -130,7 +127,22 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
             mgr.registerListener(this, orient, SensorManager.SENSOR_DELAY_NORMAL);
             myL.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
             //camera
-            camera = Camera.open();
+            //we have to pass the camera id that we want to use to the surfaceview
+            CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+
+            try {
+                String cameraId = manager.getCameraIdList()[0];
+                CameraCharacteristics cc = manager.getCameraCharacteristics(cameraId);
+                int[] map = cc.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES);
+                //its 3 on a pixel and I can't find what that actually means....
+                Log.e("CameraDepth value", "Value is " + map[CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_DEPTH_OUTPUT]);
+                mPreview = new Camera2Preview(this, cameraId);
+                preview.addView(mPreview);
+
+            } catch (CameraAccessException e) {
+                Log.v(TAG, "Failed to get a camera ID!");
+                e.printStackTrace();
+            }
 
         }
     }
@@ -180,59 +192,6 @@ public class MainActivity extends Activity implements SensorEventListener, Locat
     @Override
     public void onProviderDisabled(String provider) {
         // ignoring!
-    }
-
-
-    //finally the following are for the Camera preview.
-    private Camera.Size getBestPreviewSize(int width, int height, Camera.Parameters parameters) {
-        Camera.Size result = null;
-
-        for (Camera.Size size : parameters.getSupportedPreviewSizes()) {
-            if (size.width <= width && size.height <= height) {
-                if (result == null) {
-                    result = size;
-                } else {
-                    int resultArea = result.width * result.height;
-                    int newArea = size.width * size.height;
-
-                    if (newArea > resultArea) {
-                        result = size;
-                    }
-                }
-            }
-        }
-
-        return (result);
-    }
-
-    @Override
-    public void surfaceCreated(SurfaceHolder holder) {
-        try {
-            camera.setPreviewDisplay(previewHolder);
-        } catch (Throwable t) {
-            Log.e("Camera", "Exception in setPreviewDisplay()", t);
-        }
-
-    }
-
-    @Override
-    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-        Camera.Parameters parameters = camera.getParameters();
-        Camera.Size size = getBestPreviewSize(width, height, parameters);
-
-        if (size != null) {
-            parameters.setPreviewSize(size.width, size.height);
-            camera.setParameters(parameters);
-            camera.startPreview();
-            inPreview = true;
-        }
-
-    }
-
-    @Override
-    public void surfaceDestroyed(SurfaceHolder holder) {
-        // TODO Auto-generated method stub
-
     }
 
 
