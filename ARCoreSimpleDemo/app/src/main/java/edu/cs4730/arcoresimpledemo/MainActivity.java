@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity  implements GLSurfaceView.Re
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] results) {
+
         if (!CameraPermissionHelper.hasCameraPermission(this)) {
             Toast.makeText(this, "Camera permission is needed to run this application", Toast.LENGTH_LONG)
                 .show();
@@ -188,6 +189,7 @@ public class MainActivity extends AppCompatActivity  implements GLSurfaceView.Re
             }
             finish();
         }
+        super.onRequestPermissionsResult(requestCode, permissions, results);
     }
     private void showSnackbarMessage(String message, boolean finishOnDismiss) {
         messageSnackbar =
