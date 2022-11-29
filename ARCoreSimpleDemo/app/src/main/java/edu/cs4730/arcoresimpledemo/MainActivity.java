@@ -1,5 +1,6 @@
 package edu.cs4730.arcoresimpledemo;
 
+import android.annotation.SuppressLint;
 import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity  implements GLSurfaceView.Re
     private final ArrayBlockingQueue<MotionEvent> queuedSingleTaps = new ArrayBlockingQueue<>(16);
     private final ArrayList<Anchor> anchors = new ArrayList<>();
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity  implements GLSurfaceView.Re
             new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
+                    v.performClick();
                     return gestureDetector.onTouchEvent(event);
                 }
             });
