@@ -1,8 +1,0 @@
-edu/cs4730/basicardemo/Camera2Preview.java
- edu.cs4730.basicardemo.Camera2Preview
- edu.cs4730.basicardemo.Camera2Preview$1
- edu.cs4730.basicardemo.Camera2Preview$2
-edu/cs4730/basicardemo/MainActivity.java
- edu.cs4730.basicardemo.MainActivity
-edu/cs4730/basicardemo/BuildConfig.java
- edu.cs4730.basicardemo.BuildConfig

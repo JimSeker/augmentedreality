@@ -21,15 +21,24 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.common.util.concurrent.ListenableFuture;
+
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ImageCapture;
+import androidx.camera.core.Preview;
+import androidx.camera.lifecycle.ProcessCameraProvider;
+import androidx.camera.view.PreviewView;
 import androidx.core.content.ContextCompat;
 
 
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * A very simple/basic AR example.
@@ -61,8 +70,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor accel, orient;
 
     //camera and preview
-    Camera2Preview mPreview;
-    FrameLayout preview;
+    PreviewView viewFinder;
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    private ImageCapture imageCapture;
 
     boolean inPreview;
 
@@ -111,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         myL = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //setup the location listener.
 
-        preview = findViewById(R.id.cameraPreview);
+        viewFinder = findViewById(R.id.viewFinder);
 
     }
 
@@ -141,23 +151,40 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             mgr.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
             mgr.registerListener(this, orient, SensorManager.SENSOR_DELAY_NORMAL);
             myL.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+
             //camera
-            //we have to pass the camera id that we want to use to the surfaceview
-            CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
+            ListenableFuture<ProcessCameraProvider> cameraProviderFuture = ProcessCameraProvider.getInstance(this);
+            cameraProviderFuture.addListener(
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            ProcessCameraProvider cameraProvider = cameraProviderFuture.get();
+                            Preview preview = (new Preview.Builder()).build();
+                            preview.setSurfaceProvider(viewFinder.getSurfaceProvider());
 
-            try {
-                String cameraId = manager.getCameraIdList()[0];
-                CameraCharacteristics cc = manager.getCameraCharacteristics(cameraId);
-                int[] map = cc.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES);
-                //its 3 on a pixel and I can't find what that actually means....
-//                Log.e("CameraDepth value", "Value is " + map[CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_DEPTH_OUTPUT]);
-                mPreview = new Camera2Preview(this, cameraId);
-                preview.addView(mPreview);
+                            imageCapture = new ImageCapture.Builder()
+                                .setCaptureMode(ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY)
+                                .build();
 
-            } catch (CameraAccessException e) {
-                Log.v(TAG, "Failed to get a camera ID!");
-                e.printStackTrace();
-            }
+                            CameraSelector cameraSelector = new CameraSelector.Builder()
+                                .requireLensFacing(CameraSelector.LENS_FACING_BACK)
+                                .build();
+
+                            // Unbind use cases before rebinding
+                            cameraProvider.unbindAll();
+
+                            // Bind use cases to camera
+                            cameraProvider.bindToLifecycle(
+                                MainActivity.this, cameraSelector, preview, imageCapture);
+
+
+                        } catch (Exception e) {
+                            Log.e(TAG, "Use case binding failed", e);
+                        }
+                    }
+                }, ContextCompat.getMainExecutor(this)
+            );
 
         }
     }
