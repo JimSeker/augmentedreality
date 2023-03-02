@@ -1,22 +1,22 @@
 [
     {
-        "merged": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-hdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\src\\main\\res\\drawable-hdpi\\ic_launcher.png"
+        "merged": "edu.cs4730.basicardemo.app-merged_res-21:/layout_activity_main.xml.flat",
+        "source": "edu.cs4730.basicardemo.app-main-23:/layout/activity_main.xml"
     },
     {
-        "merged": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xxhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\src\\main\\res\\drawable-xxhdpi\\ic_launcher.png"
+        "merged": "edu.cs4730.basicardemo.app-merged_res-21:/drawable-xhdpi_ic_launcher.png.flat",
+        "source": "edu.cs4730.basicardemo.app-main-23:/drawable-xhdpi/ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\src\\main\\res\\drawable-xhdpi\\ic_launcher.png"
+        "merged": "edu.cs4730.basicardemo.app-merged_res-21:/drawable-mdpi_ic_launcher.png.flat",
+        "source": "edu.cs4730.basicardemo.app-main-23:/drawable-mdpi/ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\build\\intermediates\\res\\merged\\debug\\layout_activity_main.xml.flat",
-        "source": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\src\\main\\res\\layout\\activity_main.xml"
+        "merged": "edu.cs4730.basicardemo.app-merged_res-21:/drawable-hdpi_ic_launcher.png.flat",
+        "source": "edu.cs4730.basicardemo.app-main-23:/drawable-hdpi/ic_launcher.png"
     },
     {
-        "merged": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi_ic_launcher.png.flat",
-        "source": "C:\\Users\\seker\\git\\augmentedreality\\basicARDemo\\app\\src\\main\\res\\drawable-mdpi\\ic_launcher.png"
+        "merged": "edu.cs4730.basicardemo.app-merged_res-21:/drawable-xxhdpi_ic_launcher.png.flat",
+        "source": "edu.cs4730.basicardemo.app-main-23:/drawable-xxhdpi/ic_launcher.png"
     }
 ]

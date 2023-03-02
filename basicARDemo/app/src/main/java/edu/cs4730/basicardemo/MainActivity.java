@@ -1,9 +1,9 @@
 package edu.cs4730.basicardemo;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.hardware.Camera;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -15,17 +15,21 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-
-import androidx.core.app.ActivityCompat;
-
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.util.Log;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.Window;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+
+import java.util.Map;
 
 /**
  * A very simple/basic AR example.
@@ -39,21 +43,19 @@ import android.widget.TextView;
  * <p>
  * Yes, some many things are deprecated in 22... orientation... I know.
  * <p>
- * NOTE: the first time, the camera is blank after getting permissions.  I didn't peruse a fix.
  */
 
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, LocationListener {
 
     static public String TAG = "MainActivity";
-
+    ActivityResultLauncher<String[]> rpl;
+    private String[] REQUIRED_PERMISSIONS;
 
     TextView tv_alt, tv_lat, tv_long; //gps
     TextView tv_head, tv_pitch, tv_roll; //orientation
     TextView tv_x, tv_y, tv_z;  //ACCELEROMETER
 
-    //sensor and gps
-    public static final int REQUEST_FINE_ACCESS = 0;
     private LocationManager myL;
     private SensorManager mgr;
     private Sensor accel, orient;
@@ -66,9 +68,24 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        REQUIRED_PERMISSIONS = new String[]{Manifest.permission.CAMERA, Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
+        //Use this to check permissions.
+        rpl = registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(),
+            new ActivityResultCallback<Map<String, Boolean>>() {
+                @Override
+                public void onActivityResult(Map<String, Boolean> isGranted) {
+                    if (allPermissionsGranted()) {
+                        startDemo();  //call the method again, so the gps demo will start up.
+                    } else {
+                        Toast.makeText(getApplicationContext(), "Permissions not granted by the user.", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
+                }
+            }
+        );
 
         //display setup stuff
         tv_alt = findViewById(R.id.altitudeValue);
@@ -113,14 +130,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         inPreview = false;
     }
 
+    @SuppressLint("MissingPermission")  //I'm really asking, studio can't tell.
     public void startDemo() {
-        if ((ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) ||
-            (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED)) {
+        if (!allPermissionsGranted()) {
             //I'm on not explaining why, just asking for permission.
             Log.v(TAG, "asking for permissions");
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CAMERA},
-                MainActivity.REQUEST_FINE_ACCESS);
-
+            rpl.launch(REQUIRED_PERMISSIONS);
         } else {
             //gps
             mgr.registerListener(this, accel, SensorManager.SENSOR_DELAY_NORMAL);
@@ -135,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 CameraCharacteristics cc = manager.getCameraCharacteristics(cameraId);
                 int[] map = cc.get(CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES);
                 //its 3 on a pixel and I can't find what that actually means....
-                Log.e("CameraDepth value", "Value is " + map[CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_DEPTH_OUTPUT]);
+//                Log.e("CameraDepth value", "Value is " + map[CameraCharacteristics.REQUEST_AVAILABLE_CAPABILITIES_DEPTH_OUTPUT]);
                 mPreview = new Camera2Preview(this, cameraId);
                 preview.addView(mPreview);
 
@@ -173,9 +188,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         //if we have location information, update the screen here. just lat and lot, others
         //are shown if you may need them.
         if (location != null) {
-            tv_alt.setText("Altitude: " + (location.getAltitude() * 3.2808399) + " ft");  //1 meter is 3.2808399 feet
-            tv_lat.setText("Latitude: " + location.getLatitude());
-            tv_long.setText("Longitude: " + location.getLongitude());
+            double alt = location.getAltitude() * 3.2808399;
+            tv_alt.setText((location.getAltitude() * 3.2808399) + " ft");  //1 meter is 3.2808399 feet
+            tv_lat.setText(location.getLatitude() + " ");
+            tv_long.setText(location.getLongitude() + " ");
         }
     }
 
@@ -196,29 +212,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
 
     /**
-     * Callback received when a permissions request has been completed.
+     * This a helper method to check for the permissions.
      */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        Log.v(TAG, "onRequest result called.");
-        switch (requestCode) {
-            case REQUEST_FINE_ACCESS:
-                //received result for GPS access
-                Log.v(TAG, "Received response for gps permission request.");
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    Log.v(TAG, permissions[0] + " permission has now been granted. Showing preview.");
-                    startDemo();  //call the method again, so the gps demo will start up.
-                } else {
-                    // permission denied,    Disable this feature or close the app.
-                    Log.v(TAG, "GPS permission was NOT granted.");
-                }
-
-                return;
-            default:
-                super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    private boolean allPermissionsGranted() {
+        for (String permission : REQUIRED_PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                return false;
+            }
         }
+        return true;
     }
-
 }
