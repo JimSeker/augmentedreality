@@ -1,5 +1,7 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     tools:context="edu.cs4730.basicardemo.MainActivity">
@@ -7,177 +9,181 @@
     <androidx.camera.view.PreviewView
         android:id="@+id/viewFinder"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" />
+        android:layout_height="fill_parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/xAxisLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
         android:layout_marginLeft="18dp"
         android:layout_marginTop="15dp"
         android:background="#7F000000"
-        android:text="@string/xAxis" />
+        android:text="@string/xAxis"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/yAxisLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/xAxisLabel"
-        android:layout_alignLeft="@+id/xAxisLabel"
         android:background="#7F000000"
-        android:text="@string/yAxis" />
+        android:text="@string/yAxis"
+        app:layout_constraintLeft_toLeftOf="@+id/xAxisLabel"
+        app:layout_constraintTop_toBottomOf="@+id/xAxisLabel" />
 
     <TextView
         android:id="@+id/zAxisLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/yAxisLabel"
-        android:layout_alignLeft="@+id/yAxisLabel"
         android:background="#7F000000"
-        android:text="@string/zAxis" />
+        android:text="@string/zAxis"
+        app:layout_constraintLeft_toLeftOf="@+id/yAxisLabel"
+        app:layout_constraintTop_toBottomOf="@+id/yAxisLabel" />
 
     <TextView
         android:id="@+id/headingLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/zAxisLabel"
-        android:layout_alignLeft="@+id/zAxisLabel"
         android:layout_marginTop="19dp"
         android:background="#7F000000"
-        android:text="@string/heading" />
+        android:text="@string/heading"
+        app:layout_constraintLeft_toLeftOf="@+id/zAxisLabel"
+        app:layout_constraintTop_toBottomOf="@+id/zAxisLabel" />
 
     <TextView
         android:id="@+id/pitchLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/headingLabel"
-        android:layout_alignLeft="@+id/headingLabel"
         android:background="#7F000000"
-        android:text="@string/pitch" />
+        android:text="@string/pitch"
+        app:layout_constraintLeft_toLeftOf="@+id/headingLabel"
+        app:layout_constraintTop_toBottomOf="@+id/headingLabel" />
 
     <TextView
         android:id="@+id/rollLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/pitchLabel"
-        android:layout_alignLeft="@+id/pitchLabel"
         android:background="#7F000000"
-        android:text="@string/roll" />
+        android:text="@string/roll"
+        app:layout_constraintLeft_toLeftOf="@+id/pitchLabel"
+        app:layout_constraintTop_toBottomOf="@+id/pitchLabel" />
 
     <TextView
         android:id="@+id/latitudeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/rollLabel"
-        android:layout_alignLeft="@+id/rollLabel"
         android:layout_marginTop="34dp"
         android:background="#7F000000"
-        android:text="@string/latitude" />
+        android:text="@string/latitude"
+        app:layout_constraintLeft_toLeftOf="@+id/rollLabel"
+        app:layout_constraintTop_toBottomOf="@+id/rollLabel" />
 
     <TextView
         android:id="@+id/longitudeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/latitudeLabel"
-        android:layout_alignLeft="@+id/latitudeLabel"
         android:background="#7F000000"
-        android:text="@string/longitude" />
+        android:text="@string/longitude"
+        app:layout_constraintLeft_toLeftOf="@+id/latitudeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/latitudeLabel" />
 
     <TextView
         android:id="@+id/altitudeLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/longitudeLabel"
-        android:layout_alignLeft="@+id/longitudeLabel"
         android:background="#7F000000"
-        android:text="@string/altitude" />
+        android:text="@string/altitude"
+        app:layout_constraintLeft_toLeftOf="@+id/longitudeLabel"
+        app:layout_constraintTop_toBottomOf="@+id/longitudeLabel" />
 
     <TextView
         android:id="@+id/xAxisValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/xAxisLabel"
         android:layout_marginLeft="56dp"
-        android:layout_toRightOf="@+id/longitudeLabel"
         android:background="#7F000000"
-        android:text="@string/empty" />
+        android:text="@string/empty"
+        app:layout_constraintBottom_toBottomOf="@+id/xAxisLabel"
+        app:layout_constraintLeft_toRightOf="@+id/longitudeLabel" />
 
     <TextView
         android:id="@+id/yAxisValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/yAxisLabel"
-        android:layout_alignLeft="@+id/xAxisValue"
-        android:layout_alignBottom="@+id/yAxisLabel"
         android:background="#7F000000"
-        android:text="@string/empty" />
+        android:text="@string/empty"
+        app:layout_constraintBaseline_toBaselineOf="@+id/yAxisLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/yAxisLabel"
+        app:layout_constraintLeft_toLeftOf="@+id/xAxisValue" />
 
     <TextView
         android:id="@+id/zAxisValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/headingLabel"
-        android:layout_alignLeft="@+id/yAxisValue"
+        android:layout_marginBottom="19dp"
         android:background="#7F000000"
-        android:text="@string/empty" />
+        android:text="@string/empty"
+        app:layout_constraintBottom_toTopOf="@+id/headingLabel"
+        app:layout_constraintLeft_toLeftOf="@+id/yAxisValue" />
 
     <TextView
         android:id="@+id/headingValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/headingLabel"
-        android:layout_alignLeft="@+id/zAxisValue"
-        android:layout_alignBottom="@+id/headingLabel"
         android:background="#7F000000"
-        android:text="@string/empty" />
+        android:text="@string/empty"
+        app:layout_constraintBaseline_toBaselineOf="@+id/headingLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/headingLabel"
+        app:layout_constraintLeft_toLeftOf="@+id/zAxisValue" />
 
     <TextView
         android:id="@+id/pitchValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/pitchLabel"
-        android:layout_alignLeft="@+id/headingValue"
-        android:layout_alignBottom="@+id/pitchLabel"
         android:background="#7F000000"
-        android:text="@string/empty" />
+        android:text="@string/empty"
+        app:layout_constraintBaseline_toBaselineOf="@+id/pitchLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/pitchLabel"
+        app:layout_constraintLeft_toLeftOf="@+id/headingValue" />
 
     <TextView
         android:id="@+id/rollValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/latitudeLabel"
-        android:layout_alignLeft="@+id/pitchValue"
+        android:layout_marginBottom="34dp"
         android:background="#7F000000"
-        android:text="@string/empty" />
+        android:text="@string/empty"
+        app:layout_constraintBottom_toTopOf="@+id/latitudeLabel"
+        app:layout_constraintLeft_toLeftOf="@+id/pitchValue" />
 
     <TextView
         android:id="@+id/latitudeValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/rollValue"
-        android:layout_alignBottom="@+id/latitudeLabel"
         android:background="#7F000000"
-        android:text="@string/empty" />
+        android:text="@string/empty"
+        app:layout_constraintBottom_toBottomOf="@+id/latitudeLabel"
+        app:layout_constraintLeft_toLeftOf="@+id/rollValue" />
 
     <TextView
         android:id="@+id/longitudeValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/longitudeLabel"
-        android:layout_alignLeft="@+id/latitudeValue"
-        android:layout_alignBottom="@+id/longitudeLabel"
         android:background="#7F000000"
-        android:text="@string/empty" />
+        android:text="@string/empty"
+        app:layout_constraintBaseline_toBaselineOf="@+id/longitudeLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/longitudeLabel"
+        app:layout_constraintLeft_toLeftOf="@+id/latitudeValue" />
 
     <TextView
         android:id="@+id/altitudeValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/altitudeLabel"
-        android:layout_alignLeft="@+id/longitudeValue"
-        android:layout_alignBottom="@+id/altitudeLabel"
         android:background="#7F000000"
-        android:text="@string/empty" />
-</RelativeLayout>
+        android:text="@string/empty"
+        app:layout_constraintBaseline_toBaselineOf="@+id/altitudeLabel"
+        app:layout_constraintBottom_toBottomOf="@+id/altitudeLabel"
+        app:layout_constraintLeft_toLeftOf="@+id/longitudeValue" />
+</androidx.constraintlayout.widget.ConstraintLayout>
