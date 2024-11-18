@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 33
+    compileSdk 35
     defaultConfig {
         applicationId "edu.cs4730.arcoresimpledemo"
-        minSdkVersion 26
-        targetSdkVersion 33
+        minSdkVersion 29
+        targetSdk 35
         versionCode 1
         versionName "1.0"
     }
@@ -15,11 +15,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    namespace 'edu.cs4730.arcoresimpledemo'
 }
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.ar:core:1.35.0'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'androidx.appcompat:appcompat:1.7.0'
+    implementation 'com.google.ar:core:1.46.0'
+    implementation 'com.google.android.material:material:1.12.0'
 }
