@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ARCoreSimpleDemo.iml" filepath="$PROJECT_DIR$/ARCoreSimpleDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ARCoreSimpleDemo.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ARCoreSimpleDemo.app.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ARCoreSimpleDemo.app.androidTest.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ARCoreSimpleDemo.app.androidTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ARCoreSimpleDemo.app.main.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ARCoreSimpleDemo.app.main.iml" />

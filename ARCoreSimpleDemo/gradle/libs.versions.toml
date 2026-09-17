@@ -1,0 +1,15 @@
+[versions]
+activity = "1.13.0"
+agp = "9.4.0"
+appcompat = "1.8.0"
+arcore = "1.56.0"
+material = "1.14.0"
+
+[libraries]
+androidx-activity = { module = "androidx.activity:activity", version.ref = "activity" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+arcore = { group = "com.google.ar", name = "core", version.ref = "arcore" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
